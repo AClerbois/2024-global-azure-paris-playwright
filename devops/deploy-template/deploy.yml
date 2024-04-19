@@ -48,7 +48,7 @@ stages:
                     appType: "webAppLinux"
                     WebAppName: ${{ parameters.azureWebAppName}}
                     packageForLinux: "$(System.ArtifactsDirectory)/**/*.zip"
-                    RuntimeStack: "DOTNETCORE|7.0"
+                    RuntimeStack: "DOTNETCORE|8.0"
 
             routeTraffic:
               steps:

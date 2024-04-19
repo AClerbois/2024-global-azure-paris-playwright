@@ -11,7 +11,7 @@
 
 ## DevOps
 
-[![Build Status](https://dev.azure.com/tartine-et-tech/rebuild-2023-nantes/_apis/build/status%2Fsenseoftech.2023-rebuilt-playwright?branchName=main)](https://dev.azure.com/tartine-et-tech/rebuild-2023-nantes/_build/latest?definitionId=3&branchName=main)
+[![Build Status](https://dev.azure.com/tartine-et-tech/2024-global-azure-paris/_apis/build/status%2FAClerbois.2024-global-azure-paris-playwright?branchName=main)](https://dev.azure.com/tartine-et-tech/2024-global-azure-paris/_build/latest?definitionId=5&branchName=main)
 
 ## Description
 

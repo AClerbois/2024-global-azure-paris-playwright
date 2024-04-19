@@ -27,7 +27,7 @@ internal class Page1Model
             .GotoAsync(_context.GetAppUrl());
         await _playwrightTest
             .Expect(_page)
-            .ToHaveTitleAsync("Playwright Demo - Rebuild");
+            .ToHaveTitleAsync("Playwright Demo - Playwright Demo");
     }
 
     public async Task ScrollToLastSectionAsync()

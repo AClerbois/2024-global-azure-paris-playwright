@@ -102,7 +102,7 @@ stages:
                   displayName: "Test automated tests"
                   inputs:
                     command: "custom"
-                    projects: "$(System.WorkFolder)/tests/Sot.Rebuild.AutomatedTests.dll"
+                    projects: "$(System.WorkFolder)/tests/AutomatedTests.dll"
                     custom: "test"
                     arguments: ' -s config.runsettings --logger "trx;logfilename=testResults.trx"'
                     workingDirectory: "$(System.WorkFolder)/tests"

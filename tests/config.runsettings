@@ -4,5 +4,24 @@
 		<Parameter name="websiteUrl" value="http://localhost" />
 		<Parameter name="environment" value="local" />
 	</TestRunParameters>
-
+	<MSTest>
+		<Parallelize>
+			<Workers>20</Workers>
+			<Scope>ClassLevel</Scope>
+		</Parallelize>
+	</MSTest>
+	<RunConfiguration>
+		<EnvironmentVariables>
+			<DEBUG>pw:browser*</DEBUG>
+		</EnvironmentVariables>
+	</RunConfiguration>
+	<!-- Playwright -->
+	<Playwright>
+		<BrowserName>chromium</BrowserName>
+		<ExpectTimeout>5000</ExpectTimeout>
+		<LaunchOptions>
+			<Headless>true</Headless>
+			<!--Channel>msedge</Channel-->
+		</LaunchOptions>
+	</Playwright>
 </RunSettings>

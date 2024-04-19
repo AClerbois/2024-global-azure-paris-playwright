@@ -100,8 +100,12 @@ stages:
 
                 - task: DotNetCoreCLI@2
                   displayName: "Test automated tests"
+                  env:
+                    PLAYWRIGHT_SERVICE_ACCESS_TOKEN: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjBiODMzNWViM2VmYzRjMjI5ZjBlY2Q5M2NjYzc1M2VhIiwidHlwIjoiSldUIn0.eyJhaWQiOiJ3ZXN0ZXVyb3BlXzBjNWUzNTZhLWYxOTctNGFmMy04ZDEwLTgxMzM5MjkyYjUxMSIsInN1YiI6InBsYXl3cmlnaHRzZXJ2aWNlYWNjZXNza2V5IiwiaWQiOiJmNjFkOTVkOS1kODk0LTRjYzItOGZkOC0wZTI1NmY3OTI4ZDAiLCJzY29wZSI6InRlc3RleGVjdXRpb24iLCJ2ZXIiOiIxLjAiLCJ1c2VyTmFtZSI6IkFkcmllbiBDbGVyYm9pcyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzNkODlmYzhkLWY4YmUtNGRlNS1hMmRiLWJhNDM1Nzc3MmQzZC8iLCJhbHRzZWNpZCI6IjE6bGl2ZS5jb206MDAwM0JGRkRCMzI5OUE3NSIsImFwcGlkIjoiYjFmZDRlYmYtMmJlZC00MTYyLWJlODQtOTdlMGZlNTIzZjY0IiwiYXBwaWRhY3IiOiIwIiwiZ3JvdXBzIjoiNGYzNjVkNjYtM2EyZC00ZWQ3LWJlNGYtNzBmYzlhODI2MDFhIiwiaWRwIjoibGl2ZS5jb20iLCJvaWQiOiI3NWQzYWVmZS0wNDJiLTRlN2EtYjdiNC0xZGVlOWY0YTQyMzUiLCJwdWlkIjoiMTAwMzdGRkU4OTYzNDU1MyIsInNjcCI6InVzZXJfaW1wZXJzb25hdGlvbiIsInRpZCI6IjNkODlmYzhkLWY4YmUtNGRlNS1hMmRiLWJhNDM1Nzc3MmQzZCIsIndpZHMiOlsiNjJlOTAzOTQtNjlmNS00MjM3LTkxOTAtMDEyMTc3MTQ1ZTEwIiwiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sIm5iZiI6MTcxMzU1Nzg3NSwiZXhwIjoxNzE2MTQ5ODczLCJpYXQiOjE3MTM1NTc4NzV9.fZ1E7YJrEKMwnQjfVxKZu_CF2asqTWcpRLe9wj1-45f5SdSkTexThVsaAAoB_xa2y3goKuk70WBJm3gdib-3FDKXD-Aa7J19P2BW4ipqtJr4C0BL8o6uXX271ScW2AAZwSh9AatBqkGjQtsACz02wGbfTQ-jiLfvT-wlf6S2pyOrCkhFLz6XO7RTxFVKlkFVayWh7PC-H-6HyhNWqXhGHurYTGRch2NwaE3PVAEPx_eso3ZS7jA72zAq6WUhemFmViMlruhmNeUmnsTxxaxKREx1-ojGAAbJ2tj_lwZBxBR0jwYo3OtzmEjjvFmfB8rFU5TAuhGBBSyY18ZKI5iQ8w"
+                    PLAYWRIGHT_SERVICE_URL: "wss://westeurope.api.playwright.microsoft.com/api/authorize/connectSession"
                   inputs:
                     command: "custom"
+                    
                     projects: "$(System.WorkFolder)/tests/AutomatedTests.dll"
                     custom: "test"
                     arguments: ' -s config.runsettings --logger "trx;logfilename=testResults.trx"'

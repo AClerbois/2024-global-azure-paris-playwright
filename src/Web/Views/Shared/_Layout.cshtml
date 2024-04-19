@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>@ViewData["Title"] - Playwright Demo</title>
+    <meta name="author" content="name" />
+    <meta name="description" content="description here" />
+    <meta name="keywords" content="keywords,here" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-white">
+    <partial name="_Header" />
+
+    <main>
+        @RenderBody();
+    </main>
+
+    <footer aria-labelledby="footer-heading" class="bg-gray-900">
+        <h2 id="footer-heading" class="sr-only">Footer</h2>
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="border-t border-gray-800 py-10">
+                <p class="text-sm text-gray-400">Copyright &copy; @DateTime.UtcNow.Year Sense of Tech, SRL.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        var h = document.documentElement,
+            b = document.body,
+            st = 'scrollTop',
+            sh = 'scrollHeight',
+            progress = document.querySelector('#progress'),
+            scroll;
+        var scrollpos = window.scrollY;
+        var header = document.getElementById("header");
+        var navcontent = document.getElementById("nav-content");
+
+        document.addEventListener('scroll', function () {
+
+            /*Refresh scroll % width*/
+            scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+            progress.style.setProperty('--scroll', scroll + '%');
+
+            /*Apply classes for slide in bar*/
+            scrollpos = window.scrollY;
+
+            if (scrollpos > 10) {
+                header.classList.add("bg-white");
+                header.classList.add("shadow");
+                navcontent.classList.remove("bg-gray-100");
+                navcontent.classList.add("bg-white");
+            } else {
+                header.classList.remove("bg-white");
+                header.classList.remove("shadow");
+                navcontent.classList.remove("bg-white");
+                navcontent.classList.add("bg-gray-100");
+            }
+        });
+
+
+        //Javascript to toggle the menu
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById("nav-content").classList.toggle("hidden");
+        }
+    </script>
+</body>
+
+</html>

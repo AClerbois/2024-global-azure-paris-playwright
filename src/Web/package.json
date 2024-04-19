@@ -1,0 +1,16 @@
+{
+    "author": "Adrien Clerbois",
+    "dependencies": {},
+    "description": "Website for the Rebuild",
+    "devDependencies": {
+        "tailwindcss": "^3.1.6"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "main": "index.js",
+    "name": "tailwindcss-starter-net6",
+    "scripts": {
+        "css:build": "npx tailwindcss -i ./wwwroot/css/site.css -o ./wwwroot/css/output.css"
+    },
+    "version": "1.0.0"
+}

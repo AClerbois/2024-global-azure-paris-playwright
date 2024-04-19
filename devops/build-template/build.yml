@@ -1,0 +1,104 @@
+stages:
+  - stage: builds
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - job: build_website
+        steps:
+          - task: UseDotNet@2
+            displayName: "Use .Net sdk"
+            inputs:
+              version: 7.x
+
+          - task: DotNetCoreCLI@2
+            name: dotnetrestore
+            displayName: dotnet restore website
+            inputs:
+              command: "restore"
+              projects: "src/**/*.csproj"
+              feedsToUse: "select"
+
+          - task: DotNetCoreCLI@2
+            name: dotnetbuild
+            displayName: dotnet build website
+            inputs:
+              command: "build"
+              projects: "src/**/*Web.csproj"
+              arguments: "-c Release --no-restore"
+
+          - task: DotNetCoreCLI@2
+            name: dotnettestwebsite
+            displayName: dotnet test website
+            inputs:
+              command: "test"
+              projects: "src/**/*Tests.csproj"
+              arguments: '--logger "trx;logfilename=testResults.trx"'
+              publishTestResults: false
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: "VSTest"
+              testResultsFiles: |
+                **/TEST-*.xml
+                **/test*.trx
+              searchFolder: "$(System.WorkFolder)"
+              mergeTestResults: true
+              testRunTitle: "Code-Testing"
+
+          - task: DotNetCoreCLI@2
+            name: dotnetpublish
+            condition: succeeded()
+            displayName: dotnet publish website
+            inputs:
+              command: "publish"
+              projects: "src/**/*Web.csproj"
+              publishWebProjects: false
+              arguments: "-c Release --output $(build.artifactstagingdirectory)/web --no-restore"
+
+          - task: PublishBuildArtifacts@1
+            condition: succeeded()
+            displayName: "Publish Artifact: Website"
+            inputs:
+              PathtoPublish: "$(build.artifactstagingdirectory)/web"
+              ArtifactName: "website"
+
+      - job: build_automated_tests
+        dependsOn: []
+        steps:
+          - task: UseDotNet@2
+            displayName: "Use .Net sdk"
+            inputs:
+              version: 7.x
+
+          - task: DotNetCoreCLI@2
+            name: dotnetrestore
+            displayName: dotnet restore automated tests
+            inputs:
+              command: "restore"
+              projects: "tests/*.csproj"
+              feedsToUse: "select"
+
+          - task: DotNetCoreCLI@2
+            name: dotnetbuild
+            displayName: dotnet build automated tests
+            inputs:
+              command: "build"
+              projects: "tests/*.csproj"
+              arguments: "-c Release --no-restore"
+
+          - task: DotNetCoreCLI@2
+            name: dotnetpublish
+            condition: succeeded()
+            displayName: dotnet publish automated tests
+            inputs:
+              command: "publish"
+              projects: "tests/*.csproj"
+              publishWebProjects: false
+              arguments: "-c Release --output $(build.artifactstagingdirectory)/automated-tests --no-restore"
+
+          - task: PublishBuildArtifacts@1
+            condition: succeeded()
+            displayName: "Publish Artifact: Automated Tests"
+            inputs:
+              PathtoPublish: "$(build.artifactstagingdirectory)/automated-tests"
+              ArtifactName: "automated-tests"

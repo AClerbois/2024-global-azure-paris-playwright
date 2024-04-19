@@ -1,0 +1,29 @@
+trigger:
+  - main
+
+stages:
+  - template: build-template/build.yml
+
+  - template: deploy-template/deploy.yml
+    parameters:
+      dependsOn: [builds]
+      environmentName: Rebuild-Website-Development
+      environment: development
+      azureWebAppName: dev-rebuild-nantes
+      azureWebUrl: https://dev-rebuild-nantes.azurewebsites.net
+
+  - template: deploy-template/deploy.yml
+    parameters:
+      dependsOn: [development_env]
+      environmentName: Rebuild-Website-Staging
+      environment: staging
+      azureWebAppName: staging-rebuild-nantes
+      azureWebUrl: https://staging-rebuild-nantes.azurewebsites.net
+
+  - template: deploy-template/deploy.yml
+    parameters:
+      dependsOn: [staging_env]
+      environmentName: Rebuild-Website-Production
+      environment: production
+      azureWebAppName: production-rebuild-nantes
+      azureWebUrl: https://production-rebuild-nantes.azurewebsites.net

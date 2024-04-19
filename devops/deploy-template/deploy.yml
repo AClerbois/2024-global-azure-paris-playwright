@@ -1,0 +1,118 @@
+parameters:
+  - name: dependsOn
+    type: object
+
+  - name: environmentName
+    type: string
+
+  - name: environment
+    type: string
+
+  - name: azureSubscription
+    type: string
+    default: "Microsoft Azure Sponsorship(939a2510-ec6f-4af4-a7c7-57509096c191)"
+
+  - name: azureWebAppName
+    type: string
+
+  - name: azureWebUrl
+    type: string
+
+stages:
+  - stage: ${{ parameters.environment}}_env
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - deployment: deploy_to_${{ parameters.environment}}
+        displayName: Deploy to ${{ parameters.environment}} env
+        pool:
+          vmImage: ubuntu-latest
+        environment:
+          name: ${{ parameters.environmentName}}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@1
+                  displayName: Download website artifact
+                  inputs:
+                    buildType: "current"
+                    downloadType: "single"
+                    artifactName: "website"
+                    downloadPath: "$(System.ArtifactsDirectory)"
+
+                - task: AzureRmWebAppDeployment@4
+                  displayName: Publish website to dev
+                  inputs:
+                    ConnectionType: "AzureRM"
+                    azureSubscription: ${{ parameters.azureSubscription}}
+                    appType: "webAppLinux"
+                    WebAppName: ${{ parameters.azureWebAppName}}
+                    packageForLinux: "$(System.ArtifactsDirectory)/**/*.zip"
+                    RuntimeStack: "DOTNETCORE|7.0"
+
+            routeTraffic:
+              steps:
+                - checkout: none
+                  displayName: prevent to checkout code
+                - task: DownloadBuildArtifacts@1
+                  displayName: Download automated-tests artifact
+                  inputs:
+                    buildType: "current"
+                    downloadType: "single"
+                    artifactName: "automated-tests"
+                    downloadPath: "$(System.ArtifactsDirectory)"
+
+                - task: ExtractFiles@1
+                  displayName: Extract archive automated-tests
+                  inputs:
+                    archiveFilePatterns: "$(System.ArtifactsDirectory)/**/*.zip"
+                    destinationFolder: "$(System.WorkFolder)/tests"
+                    cleanDestinationFolder: true
+                    overwriteExistingFiles: false
+
+                - task: PowerShell@2
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      $configxml = [xml](Get-Content $(System.WorkFolder)/tests/config.runsettings)
+
+                      $appUrl = $configxml.SelectSingleNode("//RunSettings//TestRunParameters//Parameter[@name=""websiteUrl""]")
+
+                      $appUrl.SetAttribute("value","${{ parameters.azureWebUrl }}")
+
+                      $envUrl = $configxml.SelectSingleNode("//RunSettings//TestRunParameters//Parameter[@name=""environment""]")
+
+                      $envUrl.SetAttribute("value","${{ parameters.environment}}")
+
+                      $configxml.Save("$(System.WorkFolder)/tests/config.runsettings")
+
+                - task: UseDotNet@2
+                  displayName: "Use .Net sdk"
+                  inputs:
+                    version: 7.x
+
+                - task: PowerShell@2
+                  displayName: "Install Playwright"
+                  inputs:
+                    targetType: "inline"
+                    script: "./playwright.ps1 install"
+                    workingDirectory: "$(System.WorkFolder)/tests"
+
+                - task: DotNetCoreCLI@2
+                  displayName: "Test automated tests"
+                  inputs:
+                    command: "custom"
+                    projects: "$(System.WorkFolder)/tests/Sot.Rebuild.AutomatedTests.dll"
+                    custom: "test"
+                    arguments: ' -s config.runsettings --logger "trx;logfilename=testResults.trx"'
+                    workingDirectory: "$(System.WorkFolder)/tests"
+
+                - task: PublishTestResults@2
+                  inputs:
+                    testResultsFormat: "VSTest"
+                    testResultsFiles: |
+                      **/TEST-*.xml
+                      **/test*.trx
+                    searchFolder: "$(System.WorkFolder)"
+                    mergeTestResults: true
+                    testRunTitle: "AutomatedTest-${{ parameters.environment }}-results"

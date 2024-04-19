@@ -7,23 +7,23 @@ stages:
   - template: deploy-template/deploy.yml
     parameters:
       dependsOn: [builds]
-      environmentName: Rebuild-Website-Development
+      environmentName: Website-Development
       environment: development
-      azureWebAppName: dev-rebuild-nantes
-      azureWebUrl: https://dev-rebuild-nantes.azurewebsites.net
+      azureWebAppName: dev-global-azure-paris
+      azureWebUrl: https://dev-global-azure-paris.azurewebsites.net
 
   - template: deploy-template/deploy.yml
     parameters:
       dependsOn: [development_env]
-      environmentName: Rebuild-Website-Staging
+      environmentName: Website-Staging
       environment: staging
-      azureWebAppName: staging-rebuild-nantes
-      azureWebUrl: https://staging-rebuild-nantes.azurewebsites.net
+      azureWebAppName: staging-global-azure-paris
+      azureWebUrl: https://staging-global-azure-paris.azurewebsites.net
 
   - template: deploy-template/deploy.yml
     parameters:
       dependsOn: [staging_env]
-      environmentName: Rebuild-Website-Production
+      environmentName: Website-Production
       environment: production
-      azureWebAppName: production-rebuild-nantes
-      azureWebUrl: https://production-rebuild-nantes.azurewebsites.net
+      azureWebAppName: production-global-azure-paris
+      azureWebUrl: https://production-global-azure-paris.azurewebsites.net

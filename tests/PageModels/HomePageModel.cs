@@ -24,7 +24,7 @@ internal class HomePageModel
     public async Task GoToAsync()
     {
         await _page.GotoAsync(_context.GetAppUrl());
-        await _playwrightTest.Expect(_page).ToHaveTitleAsync("Playwright Demo - Rebuild");
+        await _playwrightTest.Expect(_page).ToHaveTitleAsync("Playwright Demo - Playwright Demo");
     }
 
     public async Task<Page1Model> ClickOnButtonForPage1Async()
